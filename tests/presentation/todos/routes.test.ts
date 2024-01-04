@@ -53,7 +53,7 @@ describe("Todo route testing", () => {
     const todoId = 999;
     const { body } = await request(testServer.app)
       .get(`/api/todos/${todoId}`)
-      .expect(400);
+      .expect(404);
 
     expect(body).toEqual({
       error: `Todo with id ${todoId} not found`,
@@ -111,14 +111,13 @@ describe("Todo route testing", () => {
     });
   });
 
-  // TODO: apply custom errors
   test("should return 404 if Todo not found", async () => {
     const todo = await prisma.todo.create({ data: todo1 });
     await prisma.todo.delete({ where: { id: todo.id } });
     const { body } = await request(testServer.app)
       .put(`/api/todos/${todo.id}`)
       .send({ text: "Updated text" })
-      .expect(400);
+      .expect(404);
 
     expect(body).toEqual({
       error: `Todo with id ${todo.id} not found`,
@@ -194,7 +193,7 @@ describe("Todo route testing", () => {
     await prisma.todo.delete({ where: { id: todo.id } });
     const { body } = await request(testServer.app)
       .delete(`/api/todos/${todo.id}`)
-      .expect(400);
+      .expect(404);
 
     expect(body).toEqual({
       error: `Todo with id ${todo.id} not found`,
